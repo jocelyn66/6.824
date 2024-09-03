@@ -1,7 +1,7 @@
 package main
 
 //
-// a word-count application "plugin" for MapReduce.
+// a word-count application 【"plugin"】 for MapReduce.
 //
 // go build -buildmode=plugin wc.go
 //
@@ -18,12 +18,12 @@ import "strconv"
 // and look only at the contents argument. The return value is a slice
 // of key/value pairs.
 //
-func Map(filename string, contents string) []mr.KeyValue {
+func Map(filename string, contents string) []mr.KeyValue { // 参数：文件内容
 	// function to detect word separators.
-	ff := func(r rune) bool { return !unicode.IsLetter(r) }
+	ff := func(r rune) bool { return !unicode.IsLetter(r) } //分割符
 
 	// split contents into an array of words.
-	words := strings.FieldsFunc(contents, ff)
+	words := strings.FieldsFunc(contents, ff) //作用于字符串
 
 	kva := []mr.KeyValue{}
 	for _, w := range words {

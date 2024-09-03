@@ -20,8 +20,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	m := mr.MakeCoordinator(os.Args[1:], 10)
-	for m.Done() == false {
+	m := mr.MakeCoordinator(os.Args[1:], 10) //mark 文件名序列，nReduce
+	for m.Done() == false { //监听全部完成
 		time.Sleep(time.Second)
 	}
 

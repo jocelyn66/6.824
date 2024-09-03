@@ -11,8 +11,8 @@ import "6.824/mr"
 import "plugin"
 import "os"
 import "log"
-import "io/ioutil"
-import "sort"
+import "io"
+import "sort" //常用包
 
 // for sorting by key.
 type ByKey []mr.KeyValue
@@ -23,12 +23,12 @@ func (a ByKey) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByKey) Less(i, j int) bool { return a[i].Key < a[j].Key }
 
 func main() {
-	if len(os.Args) < 3 {
+	if len(os.Args) < 3 { //note demo检查程序参数
 		fmt.Fprintf(os.Stderr, "Usage: mrsequential xxx.so inputfiles...\n")
 		os.Exit(1)
 	}
 
-	mapf, reducef := loadPlugin(os.Args[1])
+	mapf, reducef := loadPlugin(os.Args[1]) //load plugin函数
 
 	//
 	// read each input file,
@@ -41,13 +41,13 @@ func main() {
 		if err != nil {
 			log.Fatalf("cannot open %v", filename)
 		}
-		content, err := ioutil.ReadAll(file)
+		content, err := io.ReadAll(file)
 		if err != nil {
 			log.Fatalf("cannot read %v", filename)
 		}
 		file.Close()
-		kva := mapf(filename, string(content))
-		intermediate = append(intermediate, kva...)
+		kva := mapf(filename, string(content)) //传递给map
+		intermediate = append(intermediate, kva...) //mark 收集map输出，【非并行，intermediate在一个地方；并行的做法如下描述】
 	}
 
 	//
@@ -56,10 +56,10 @@ func main() {
 	// rather than being partitioned into NxM buckets.
 	//
 
-	sort.Sort(ByKey(intermediate))
+	sort.Sort(ByKey(intermediate)) //排序，为了同key聚集
 
-	oname := "mr-out-0"
-	ofile, _ := os.Create(oname)
+	oname := "mr-out-0" //reduce输出位置
+	ofile, _ := os.Create(oname) //创建文件
 
 	//
 	// call Reduce on each distinct key in intermediate[],
@@ -70,12 +70,12 @@ func main() {
 		j := i + 1
 		for j < len(intermediate) && intermediate[j].Key == intermediate[i].Key {
 			j++
-		}
+		} //找key边界
 		values := []string{}
 		for k := i; k < j; k++ {
 			values = append(values, intermediate[k].Value)
-		}
-		output := reducef(intermediate[i].Key, values)
+		} //合并
+		output := reducef(intermediate[i].Key, values)//对每个key调一次reduce函数
 
 		// this is the correct format for each line of Reduce output.
 		fmt.Fprintf(ofile, "%v %v\n", intermediate[i].Key, output)
@@ -83,7 +83,7 @@ func main() {
 		i = j
 	}
 
-	ofile.Close()
+	ofile.Close()//关闭文件
 }
 
 //
