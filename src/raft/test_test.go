@@ -86,7 +86,7 @@ func TestReElection2A(t *testing.T) {
 	cfg.end()
 }
 
-func TestManyElections2A(t *testing.T) {
+func TestManyElections2A(t *testing.T) { // todo
 	servers := 7
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -119,7 +119,7 @@ func TestManyElections2A(t *testing.T) {
 	cfg.end()
 }
 
-func TestBasicAgree2B(t *testing.T) {
+func TestBasicAgree2B(t *testing.T) { // todo
 	servers := 3
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -146,7 +146,7 @@ func TestBasicAgree2B(t *testing.T) {
 // check, based on counting bytes of RPCs, that
 // each command is sent to each peer just once.
 //
-func TestRPCBytes2B(t *testing.T) {
+func TestRPCBytes2B(t *testing.T) { // todo
 	servers := 3
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -177,7 +177,7 @@ func TestRPCBytes2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestFailAgree2B(t *testing.T) {
+func TestFailAgree2B(t *testing.T) { // todo
 	servers := 3
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -211,7 +211,7 @@ func TestFailAgree2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestFailNoAgree2B(t *testing.T) {
+func TestFailNoAgree2B(t *testing.T) { // todo
 	servers := 5
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -226,7 +226,7 @@ func TestFailNoAgree2B(t *testing.T) {
 	cfg.disconnect((leader + 2) % servers)
 	cfg.disconnect((leader + 3) % servers)
 
-	index, _, ok := cfg.rafts[leader].Start(20)
+	index, _, ok := cfg.rafts[leader].Start(20) // service向raft leader传递cmd
 	if ok != true {
 		t.Fatalf("leader rejected Start()")
 	}
@@ -262,7 +262,7 @@ func TestFailNoAgree2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestConcurrentStarts2B(t *testing.T) {
+func TestConcurrentStarts2B(t *testing.T) { // todo
 	servers := 3
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -363,7 +363,7 @@ loop:
 	cfg.end()
 }
 
-func TestRejoin2B(t *testing.T) {
+func TestRejoin2B(t *testing.T) { // todo
 	servers := 3
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -401,7 +401,7 @@ func TestRejoin2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestBackup2B(t *testing.T) {
+func TestBackup2B(t *testing.T) { // todo
 	servers := 5
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -473,7 +473,7 @@ func TestBackup2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestCount2B(t *testing.T) {
+func TestCount2B(t *testing.T) { // todo
 	servers := 3
 	cfg := make_config(t, servers, false, false)
 	defer cfg.cleanup()
@@ -800,7 +800,7 @@ func TestUnreliableAgree2C(t *testing.T) {
 	cfg.end()
 }
 
-func TestFigure8Unreliable2C(t *testing.T) {
+func TestFigure8Unreliable2C(t *testing.T) { // todo
 	servers := 5
 	cfg := make_config(t, servers, true, false)
 	defer cfg.cleanup()
@@ -1055,7 +1055,7 @@ func snapcommon(t *testing.T, name string, disconnect bool, reliable bool, crash
 			leader1 = cfg.checkOneLeader()
 		}
 		if crash {
-			cfg.start1(victim, cfg.applierSnap)
+			cfg.start1(victim, cfg.applierSnap) // todo
 			cfg.connect(victim)
 			cfg.one(rand.Int(), servers, true)
 			leader1 = cfg.checkOneLeader()
@@ -1064,7 +1064,7 @@ func snapcommon(t *testing.T, name string, disconnect bool, reliable bool, crash
 	cfg.end()
 }
 
-func TestSnapshotBasic2D(t *testing.T) {
+func TestSnapshotBasic2D(t *testing.T) { // todo
 	snapcommon(t, "Test (2D): snapshots basic", false, true, false)
 }
 

@@ -64,12 +64,12 @@ func make_config(t *testing.T, n int, unreliable bool, snapshot bool) *config {
 		if runtime.NumCPU() < 2 {
 			fmt.Printf("warning: only one CPU, which may conceal locking bugs\n")
 		}
-		rand.Seed(makeSeed())
+		rand.Seed(makeSeed()) // tag go // mark
 	})
-	runtime.GOMAXPROCS(4)
+	runtime.GOMAXPROCS(4) // tag os
 	cfg := &config{}
 	cfg.t = t
-	cfg.net = labrpc.MakeNetwork()
+	cfg.net = labrpc.MakeNetwork() // tag rpc
 	cfg.n = n
 	cfg.applyErr = make([]string, cfg.n)
 	cfg.rafts = make([]*Raft, cfg.n)
@@ -90,12 +90,12 @@ func make_config(t *testing.T, n int, unreliable bool, snapshot bool) *config {
 	// create a full set of Rafts.
 	for i := 0; i < cfg.n; i++ {
 		cfg.logs[i] = map[int]interface{}{}
-		cfg.start1(i, applier)
+		cfg.start1(i, applier) // todo
 	}
 
 	// connect everyone
 	for i := 0; i < cfg.n; i++ {
-		cfg.connect(i)
+		cfg.connect(i) // todo
 	}
 
 	return cfg
@@ -178,7 +178,7 @@ func (cfg *config) applier(i int, applyCh chan ApplyMsg) {
 const SnapShotInterval = 10
 
 // periodically snapshot raft state
-func (cfg *config) applierSnap(i int, applyCh chan ApplyMsg) {
+func (cfg *config) applierSnap(i int, applyCh chan ApplyMsg) { // todo
 	lastApplied := 0
 	for m := range applyCh {
 		if m.SnapshotValid {

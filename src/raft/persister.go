@@ -11,7 +11,7 @@ package raft
 
 import "sync"
 
-type Persister struct {
+type Persister struct { // mark
 	mu        sync.Mutex
 	raftstate []byte
 	snapshot  []byte
@@ -23,7 +23,7 @@ func MakePersister() *Persister {
 
 func clone(orig []byte) []byte {
 	x := make([]byte, len(orig))
-	copy(x, orig)
+	copy(x, orig) // tag os
 	return x
 }
 

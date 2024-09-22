@@ -71,7 +71,7 @@ func (state NodeState) String() string {
 }
 
 type Entry struct {
-	Index   int
+	Index   int // snapshot使用
 	Term    int
 	Command interface{}
 }
@@ -92,7 +92,7 @@ func (r *lockedRand) Intn(n int) int {
 }
 
 var globalRand = &lockedRand{
-	rand: rand.New(rand.NewSource(time.Now().UnixNano())),
+	rand: rand.New(rand.NewSource(time.Now().UnixNano())), // tag go
 }
 
 const (
@@ -105,7 +105,7 @@ func StableHeartbeatTimeout() time.Duration {
 }
 
 func RandomizedElectionTimeout() time.Duration {
-	return time.Duration(ElectionTimeout+globalRand.Intn(ElectionTimeout)) * time.Millisecond
+	return time.Duration(ElectionTimeout+globalRand.Intn(ElectionTimeout)) * time.Millisecond //tag go //todo 
 }
 
 func Min(x, y int) int {

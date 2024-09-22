@@ -38,8 +38,8 @@ func (request AppendEntriesRequest) String() string {
 type AppendEntriesResponse struct {
 	Term          int
 	Success       bool
-	ConflictIndex int
-	ConflictTerm  int
+	ConflictIndex int // todo
+	ConflictTerm  int // todo
 }
 
 func (response AppendEntriesResponse) String() string {
