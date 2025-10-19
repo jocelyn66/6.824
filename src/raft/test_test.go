@@ -58,6 +58,7 @@ func TestReElection2A(t *testing.T) {
 	cfg.begin("Test (2A): election after network failure")
 
 	leader1 := cfg.checkOneLeader()
+	fmt.Printf("disconnect node%d\n", leader1)
 
 	// if the leader disconnects, a new one should be elected.
 	cfg.disconnect(leader1)
@@ -66,21 +67,26 @@ func TestReElection2A(t *testing.T) {
 	// if the old leader rejoins, that shouldn't
 	// disturb the new leader.
 	cfg.connect(leader1)
+	fmt.Printf("connect node%d\n", leader1)
 	leader2 := cfg.checkOneLeader()
 
 	// if there's no quorum, no leader should
 	// be elected.
 	cfg.disconnect(leader2)
+	fmt.Printf("kill node%d\n", leader2)
 	cfg.disconnect((leader2 + 1) % servers)
+	fmt.Printf("kill node%d\n", leader2 + 1)
 	time.Sleep(2 * RaftElectionTimeout)
 	cfg.checkNoLeader()
 
 	// if a quorum arises, it should elect a leader.
 	cfg.connect((leader2 + 1) % servers)
+	fmt.Printf("connect node%d\n", leader2 + 1)
 	cfg.checkOneLeader()
 
 	// re-join of last node shouldn't prevent leader from existing.
 	cfg.connect(leader2)
+	fmt.Printf("connect node%d\n", leader2)
 	cfg.checkOneLeader()
 
 	cfg.end()
@@ -126,7 +132,7 @@ func TestBasicAgree2B(t *testing.T) {
 
 	cfg.begin("Test (2B): basic agreement")
 
-	iters := 3
+	iters := 3 // 迭代次数
 	for index := 1; index < iters+1; index++ {
 		nd, _ := cfg.nCommitted(index)
 		if nd > 0 {
@@ -135,7 +141,7 @@ func TestBasicAgree2B(t *testing.T) {
 
 		xindex := cfg.one(index*100, servers, false)
 		if xindex != index {
-			t.Fatalf("got index %v but expected %v", xindex, index)
+			t.Fatalf("got index %v but expected %v", xindex, index)	// log index从1开始连续
 		}
 	}
 
@@ -313,7 +319,7 @@ loop:
 		}
 
 		failed := false
-		cmds := []int{}
+		cmds := []int{}	// todo tag go 
 		for index := range is {
 			cmd := cfg.wait(index, servers, term)
 			if ix, ok := cmd.(int); ok {
@@ -331,7 +337,7 @@ loop:
 		}
 
 		if failed {
-			// avoid leaking goroutines
+			// avoid leaking goroutines // todo
 			go func() {
 				for range is {
 				}

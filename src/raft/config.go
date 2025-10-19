@@ -359,6 +359,7 @@ func (cfg *config) setunreliable(unrel bool) {
 	cfg.net.Reliable(!unrel)
 }
 
+// 统计网络数据
 func (cfg *config) bytesTotal() int64 {
 	return cfg.net.GetTotalBytes()
 }
@@ -429,7 +430,7 @@ func (cfg *config) checkNoLeader() {
 	}
 }
 
-// how many servers think a log entry is committed?
+// how many servers think a log entry is committed? 检查是否commit
 func (cfg *config) nCommitted(index int) (int, interface{}) {
 	count := 0
 	var cmd interface{} = nil
@@ -496,8 +497,8 @@ func (cfg *config) wait(index int, n int, startTerm int) interface{} {
 // if retry==true, may submit the command multiple
 // times, in case a leader fails just after Start().
 // if retry==false, calls Start() only once, in order
-// to simplify the early Lab 2B tests.
-func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
+// to simplify the early Lab 2B tests. 只发一次
+func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {	// 请求
 	t0 := time.Now()
 	starts := 0
 	for time.Since(t0).Seconds() < 10 {
